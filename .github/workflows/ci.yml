@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  packages: write
+
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -29,5 +34,15 @@ jobs:
       - name: Run tests
         run: python -m pytest
 
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build Docker image
-        run: docker build -t mini-ci-cd .
+        run: docker build -t ghcr.io/${{ github.actor }}/mini-ci-cd:latest .
+
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.actor }}/mini-ci-cd:latest
