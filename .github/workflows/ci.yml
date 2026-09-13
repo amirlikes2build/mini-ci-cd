@@ -60,13 +60,26 @@ jobs:
             docker push ghcr.io/${{ github.actor }}/mini-ci-cd:latest
             docker push ghcr.io/${{ github.actor }}/mini-ci-cd:${{ github.sha }}
 
-  deploy:
+  deploy-development:
     runs-on: ubuntu-latest
     needs: build-and-push
+    environment: development
 
     steps:
-      - name: Fake deploy
+      - name: Fake deploy to development
         run: |
-            echo "Deploying... image"
+            echo "Deploying to development..."
             echo "ghcr.io/${{ github.actor }}/mini-ci-cd:${{ github.sha }}"
-            echo "Deployment complete"
+            echo "Development Deployment complete"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: deploy-development
+    environment: production
+
+    steps:
+      - name: Fake deploy to production
+        run: |
+            echo "Deploying to production..."
+            echo "ghcr.io/${{ github.actor }}/mini-ci-cd:${{ github.sha }}"
+            echo "Production Deployment complete"
