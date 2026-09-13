@@ -50,7 +50,12 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build Docker image
-        run: docker build -t ghcr.io/${{ github.actor }}/mini-ci-cd:latest .
+        run: |
+            docker build \
+            -t ghcr.io/${{ github.actor }}/mini-ci-cd:latest \
+            -t ghcr.io/${{ github.actor }}/mini-ci-cd:${{ github.sha }} .
 
       - name: Push Docker image
-        run: docker push ghcr.io/${{ github.actor }}/mini-ci-cd:latest
+        run: |
+            docker push ghcr.io/${{ github.actor }}/mini-ci-cd:latest
+            docker push ghcr.io/${{ github.actor }}/mini-ci-cd:${{ github.sha }}
