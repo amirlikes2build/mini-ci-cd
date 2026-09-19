@@ -2,3 +2,4 @@ pytest
 ruff
 fastapi
 uvicorn
+httpx
