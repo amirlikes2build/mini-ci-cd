@@ -66,11 +66,12 @@ jobs:
     environment: development
 
     steps:
-      - name: Fake deploy to development
+      - name: Trigger Render development deploy
+        env:
+          RENDER_DEV_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEV_DEPLOY_HOOK_URL }}
         run: |
-            echo "Deploying to development..."
-            echo "ghcr.io/${{ github.actor }}/mini-ci-cd:${{ github.sha }}"
-            echo "Development Deployment complete"
+            curl --fail --silent --show-error -X POST "$RENDER_DEV_DEPLOY_HOOK_URL"
+
 
   deploy-production:
     runs-on: ubuntu-latest
