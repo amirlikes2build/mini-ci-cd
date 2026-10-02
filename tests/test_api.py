@@ -22,3 +22,12 @@ def test_get_subtraction():
 
     assert response.status_code == 200
     assert response.json() == {"result": 0}
+
+def test_healthz():
+    response = client.get("/healthz")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "status": "ok",
+        "service": "mini-ci-cd",
+    }

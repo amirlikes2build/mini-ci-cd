@@ -16,3 +16,10 @@ def get_addition(a: float, b: float):
 @app.get('/subtract')
 def get_subtraction(a: float, b: float):
     return  {"result" : subtract(a, b)}
+
+@app.get("/healthz")
+def get_health():
+    return {
+        "status": "ok",
+        "service": "mini-ci-cd",
+    }
