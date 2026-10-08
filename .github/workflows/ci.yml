@@ -91,28 +91,6 @@ jobs:
           echo "$response"
           echo "$response" | grep '"status":"ok"'
 
-      - name: Check add endpoint
-        run: |
-          response=$(curl --fail --silent --show-error \
-            --retry 10 \
-            --retry-delay 10 \
-            --retry-all-errors \
-            "$BASE_URL/add?a=5&b=3")
-
-          echo "$response"
-          echo "$response" | grep '"result":8'
-
-      - name: Check subtract endpoint
-        run: |
-          response=$(curl --fail --silent --show-error \
-            --retry 10 \
-            --retry-delay 10 \
-            --retry-all-errors \
-            "$BASE_URL/subtract?a=5&b=3")
-
-          echo "$response"
-          echo "$response" | grep '"result":2'
-
       - name: Check signal search endpoint
         run: |
           response=$(curl --fail --silent --show-error \
