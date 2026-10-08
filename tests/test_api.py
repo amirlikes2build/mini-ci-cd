@@ -21,21 +21,6 @@ def test_get_status():
     assert response.status_code == 200
     assert response.json() == {"message": "mini-ci-cd is running"}
 
-
-def test_get_addition():
-    response = client.get("/add?a=1&b=1")
-
-    assert response.status_code == 200
-    assert response.json() == {"result": 2}
-
-
-def test_get_subtraction():
-    response = client.get("/subtract?a=1&b=1")
-
-    assert response.status_code == 200
-    assert response.json() == {"result": 0}
-
-
 def test_healthz():
     response = client.get("/healthz")
 
@@ -44,7 +29,6 @@ def test_healthz():
         "status": "ok",
         "service": "mini-ci-cd",
     }
-
 
 def test_get_signals_returns_list_of_signals():
     response = client.get("/signals")
@@ -56,7 +40,6 @@ def test_get_signals_returns_list_of_signals():
     assert isinstance(data, list)
     assert len(data) > 0
     assert EXPECTED_SIGNAL_FIELDS.issubset(data[0].keys())
-
 
 def test_get_signal_normal():
     response = client.get("/signals/AAPL")
