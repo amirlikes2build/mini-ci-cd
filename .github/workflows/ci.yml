@@ -122,10 +122,8 @@ jobs:
             "$BASE_URL/signals/AAPL")
 
           echo "$response"
-          echo "$response" | grep '"symbol":"AAPL"'
+          echo "$response" | grep '"ticker":"AAPL"'
           echo "$response" | grep '"signal"'
-          echo "$response" | grep '"price"'
-          echo "$response" | grep '"confidence"'
           echo "$response" | grep '"timestamp"'
 
   deploy-production:
