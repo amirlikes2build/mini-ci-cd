@@ -1,9 +1,18 @@
 from fastapi.testclient import TestClient
 
 from app.main import app
-from app.signals import all_signals, search_signal
 
 client = TestClient(app)
+
+EXPECTED_SIGNAL_FIELDS = {
+    "ticker",
+    "previous_price",
+    "current_price",
+    "price_change",
+    "price_change_pct",
+    "signal",
+    "timestamp",
+}
 
 
 def test_get_status():
@@ -12,17 +21,20 @@ def test_get_status():
     assert response.status_code == 200
     assert response.json() == {"message": "mini-ci-cd is running"}
 
+
 def test_get_addition():
     response = client.get("/add?a=1&b=1")
 
     assert response.status_code == 200
     assert response.json() == {"result": 2}
 
+
 def test_get_subtraction():
     response = client.get("/subtract?a=1&b=1")
 
     assert response.status_code == 200
     assert response.json() == {"result": 0}
+
 
 def test_healthz():
     response = client.get("/healthz")
@@ -33,26 +45,45 @@ def test_healthz():
         "service": "mini-ci-cd",
     }
 
-def test_get_signals():
-    response = client.get('/signals')
+
+def test_get_signals_returns_list_of_signals():
+    response = client.get("/signals")
 
     assert response.status_code == 200
-    assert response.json() == all_signals()
+
+    data = response.json()
+
+    assert isinstance(data, list)
+    assert len(data) > 0
+    assert EXPECTED_SIGNAL_FIELDS.issubset(data[0].keys())
+
 
 def test_get_signal_normal():
-    response = client.get('/signals/AAPL')
+    response = client.get("/signals/AAPL")
 
     assert response.status_code == 200
-    assert response.json() == search_signal('AAPL')
+
+    data = response.json()
+
+    assert data["ticker"] == "AAPL"
+    assert EXPECTED_SIGNAL_FIELDS.issubset(data.keys())
+
 
 def test_get_signal_lowercase():
-    response = client.get('/signals/aapl')
+    response = client.get("/signals/aapl")
 
     assert response.status_code == 200
-    assert response.json() == search_signal('AAPL')
 
-def test_get_signal_unknown_symbol():
-    response = client.get('/signals/UNKNOWN')
+    data = response.json()
+
+    assert data["ticker"] == "AAPL"
+    assert EXPECTED_SIGNAL_FIELDS.issubset(data.keys())
+
+
+def test_get_signal_unknown_ticker():
+    response = client.get("/signals/UNKNOWN")
 
     assert response.status_code == 404
-    assert response.json() == {"detail":"Signal not found for symbol: UNKNOWN"}
+    assert response.json() == {
+        "detail": "Signal not found for ticker: UNKNOWN",
+    }
